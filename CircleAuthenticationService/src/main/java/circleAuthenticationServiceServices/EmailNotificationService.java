@@ -10,7 +10,7 @@ public class EmailNotificationService {
   //  static final String TO = "wenchaozhang@ufl.edu";   
                                                       
     
-    static final String BODY = "Your circle account has already be created successfully. Your username is your email you provided to us.";
+    static final String BODY = "Your circle account has already been created successfully. Your username is your email you provided to us.";
     static final String SUBJECT = "Circle Account Created Email Notification";
     static final String SMTP_USERNAME = "AKIAJ372Y7QIGGIKMIXQ";  
     static final String SMTP_PASSWORD = "Avpo2rdGPy8rQBcjPmPemS0e6PN4FvjgwmxSsdSIX4tQ";   
