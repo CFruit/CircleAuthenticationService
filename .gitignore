@@ -102,6 +102,7 @@ local.properties
 .settings/
 .loadpath
 servers/*
+.recommenders/*
 /src/main/resources/rebel.xml
 # External tool builders
 .externalToolBuilders/
