@@ -121,6 +121,11 @@ public class AWSRepository {
             throw new AmazonServiceException("CircleUserAccounts doesn't exist.");
          }
          
+         String tableName1 = "CircleAccessTokens";
+         if (!Tables.doesTableExist(this.dynamoDB, tableName1)) {
+            throw new AmazonServiceException("CircleUserAccounts doesn't exist.");
+         }
+         
          
          HashMap<String, Condition> scanFilter = new HashMap<String, Condition>();
          Condition condition = new Condition()
@@ -129,21 +134,19 @@ public class AWSRepository {
          scanFilter.put("username", condition);
          ScanRequest scanRequest = new ScanRequest(tableName).withScanFilter(scanFilter);
          ScanResult scanResult = this.dynamoDB.scan(scanRequest);
+         
 
-         if (scanResult.getCount()==1) {
-        	 
+         if (scanResult.getCount()==1 && scanResult.getItems().get(0).get("password").getS().equals(password)) {
+        	 System.out.println(scanResult.getCount());
         	 Map<String, AttributeValue> item = scanResult.getItems().get(0);
-        	 
         	 Map<String, AttributeValue> key = new HashMap<String, AttributeValue>();
         	 key.put("username", new AttributeValue(item.get("username").getS()));
-        	 
         	 String accessToken = "Circle-Auth-"+UUID.randomUUID().toString()+UUID.randomUUID().toString();
-        	
         	  HashMap<String,AttributeValueUpdate> updates=new HashMap<String,AttributeValueUpdate>();
         	  AttributeValueUpdate update=new AttributeValueUpdate().withValue(new AttributeValue(accessToken)).withAction("PUT");
         	  updates.put("accessToken",update);
         	  try {
-        	    UpdateItemRequest req=new UpdateItemRequest(tableName,key,updates);
+        	    UpdateItemRequest req=new UpdateItemRequest(tableName1,key,updates);
         	    this.dynamoDB.updateItem(req);
         	    return accessToken;
         	  }
@@ -155,7 +158,7 @@ public class AWSRepository {
          else {
         	 throw new AmazonClientException("Account doesn't exist!");
          }
-		
+         
 		 
 	 }
 
