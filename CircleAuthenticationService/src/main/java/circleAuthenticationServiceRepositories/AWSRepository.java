@@ -137,7 +137,7 @@ public class AWSRepository {
          
 
          if (scanResult.getCount()==1 && scanResult.getItems().get(0).get("password").getS().equals(password)) {
-        	 System.out.println(scanResult.getCount());
+
         	 Map<String, AttributeValue> item = scanResult.getItems().get(0);
         	 Map<String, AttributeValue> key = new HashMap<String, AttributeValue>();
         	 key.put("username", new AttributeValue(item.get("username").getS()));
@@ -156,10 +156,36 @@ public class AWSRepository {
         	  return null;
          }
          else {
-        	 throw new AmazonClientException("Account doesn't exist!");
+        	 throw new AmazonClientException("Account and password pair doesn't exist.");
          }
          
 		 
 	 }
 
+	 public String verifyAccessToken(String accessToken) throws Exception {
+		 String tableName = "CircleAccessTokens";
+         if (!Tables.doesTableExist(this.dynamoDB, tableName)) {
+            throw new AmazonServiceException("CircleUserAccounts doesn't exist.");
+         } 
+         
+         HashMap<String, Condition> scanFilter = new HashMap<String, Condition>();
+         Condition condition = new Condition()
+             .withComparisonOperator(ComparisonOperator.EQ.toString())
+             .withAttributeValueList(new AttributeValue(accessToken));
+         scanFilter.put("accessToken", condition);
+         ScanRequest scanRequest = new ScanRequest(tableName).withScanFilter(scanFilter);
+         ScanResult scanResult = this.dynamoDB.scan(scanRequest);
+         
+         if (scanResult.getCount()==0) {
+        	 throw new AmazonClientException("Invalid AccessToken");
+         } else if (scanResult.getCount()==1) {
+        	 
+        	 Map<String, AttributeValue> item = scanResult.getItems().get(0); 
+        	 return item.get("username").getS();
+         } else if (scanResult.getCount()>1) {
+        	 throw new AmazonServiceException("Mutiple accessTokens exist.");
+         }
+         
+         return null;
+	 }
 }

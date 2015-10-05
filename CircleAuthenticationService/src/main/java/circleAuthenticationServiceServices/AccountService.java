@@ -41,4 +41,9 @@ public class AccountService {
 		return this.awsRepository.signInVerification(username, password);
 	}
 	
+	public String verifyAccessToken(String accessToken) throws Exception {
+		
+		return this.awsRepository.verifyAccessToken(accessToken);
+	}
+	
 }
