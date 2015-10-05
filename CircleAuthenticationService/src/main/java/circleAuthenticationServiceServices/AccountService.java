@@ -36,5 +36,9 @@ public class AccountService {
 	    return;
 	}
 	
+	public String signInVerification(String username, String password) throws Exception {
+		
+		return this.awsRepository.signInVerification(username, password);
+	}
 	
 }
