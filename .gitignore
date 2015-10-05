@@ -101,6 +101,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
+servers/*
 /src/main/resources/rebel.xml
 # External tool builders
 .externalToolBuilders/
